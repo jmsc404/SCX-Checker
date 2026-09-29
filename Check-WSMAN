@@ -1,0 +1,25 @@
+$LinuxServer = "servername"
+$Port = 1270
+$Credential = Get-Credential   # SCOM Linux monitoring account Success	dnkgevseappt001.velux.org	10.45.140.226	22	1.9.1-0	Cross platform resource pool3	
+
+$SessionOption = New-WSManSessionOption `
+    -SkipCACheck `
+    -SkipCNCheck `
+    -SkipRevocationCheck
+
+Test-WSMan -ComputerName $LinuxServer -Port $Port -UseSSL -Authentication Basic -Credential $Credential
+
+
+$ResourceUri = "http://schemas.microsoft.com/wbem/wscim/1/cim-schema/2/SCX_OperatingSystem?__cimnamespace=root/scx"
+
+$ResourceUri = "http://schemas.microsoft.com/wbem/wscim/1/cim-schema/2/SCX_Agent?__cimnamespace=root/scx"
+
+$w = Get-WSManInstance `
+    -ResourceURI $ResourceUri `
+    -Enumerate `
+    -ComputerName $LinuxServer `
+    -Port 1270 `
+    -UseSSL `
+    -Authentication Basic `
+    -Credential $Credential `
+    -SessionOption $SessionOption
